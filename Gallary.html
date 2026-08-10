@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gallery — Ryven Goju Dojo</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ---------- Gallery ---------- */
+
+    .gallery-intro {
+      margin-bottom: 28px;
+    }
+
+    .gallery-intro p {
+      max-width: 850px;
+      color: var(--muted);
+    }
+
+    .dojo-select {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .dojo-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition:
+        transform var(--fast) var(--ease),
+        box-shadow var(--fast) var(--ease),
+        border-color var(--fast) var(--ease);
+    }
+
+    .dojo-card:hover {
+      transform: translateY(-5px);
+      border-color: #cfd8e6;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .dojo-card-media {
+      height: 220px;
+      overflow: hidden;
+      background: linear-gradient(135deg,#e7edf6,#f6f8fb);
+    }
+
+    .dojo-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--slow) var(--ease);
+    }
+
+    .dojo-card:hover .dojo-card-media img {
+      transform: scale(1.05);
+    }
+
+    .dojo-card-content {
+      padding: 22px;
+    }
+
+    .dojo-card-content h2 {
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 25px;
+    }
+
+    .dojo-card-content p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dojo-card-arrow {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* ---------- Individual Galleries ---------- */
+
+    .dojo-gallery {
+      margin-top: 65px;
+      scroll-margin-top: 140px;
+    }
+
+    .dojo-gallery-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .dojo-gallery-heading h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(25px, 4vw, 34px);
+    }
+
+    .dojo-gallery-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .gallery-back {
+      flex: 0 0 auto;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+      transition:
+        transform var(--fast) var(--ease),
+        background var(--fast) var(--ease);
+    }
+
+    .gallery-back:hover {
+      transform: translateY(-2px);
+      background: var(--blue-soft);
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-photo {
+      position: relative;
+      display: block;
+      height: 230px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #e7edf5;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+
+    .gallery-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--slow) var(--ease);
+    }
+
+    .gallery-photo:hover img {
+      transform: scale(1.06);
+    }
+
+    .gallery-photo::after {
+      content: "View photo";
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translate(-50%, 8px);
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(7,21,43,.82);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      opacity: 0;
+      transition:
+        opacity var(--fast) var(--ease),
+        transform var(--fast) var(--ease);
+    }
+
+    .gallery-photo:hover::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* ---------- Lightbox ---------- */
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      background: rgba(3,10,23,.92);
+    }
+
+    .lightbox.is-open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: min(1100px, 94vw);
+      max-height: 88vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 25px 70px rgba(0,0,0,.45);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 25px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255,255,255,.16);
+    }
+
+    @media (max-width: 800px) {
+      .dojo-select {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .gallery-photo {
+        height: 220px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .dojo-card-media {
+        height: 190px;
+      }
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-photo {
+        height: 250px;
+      }
+
+      .dojo-gallery-heading {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+
+    <div class="header-top">
+      <div class="header-inner">
+
+        <a class="brand" href="index.html">
+
+          <div class="logo">
+            <img src="Logo.png" alt="Ryven Goju Dojo logo">
+          </div>
+
+          <div class="title">
+            <h1>Ryven Goju Dojo</h1>
+            <p>Okinawa Goju-Ryu Karate-Kobudo</p>
+          </div>
+
+        </a>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <div class="nav-inner">
+
+        <nav class="site-nav" aria-label="Main navigation">
+          <ul>
+
+            <li>
+              <a href="index.html">Home</a>
+            </li>
+
+            <li>
+              <a href="P2.html">Kihon</a>
+            </li>
+
+            <li>
+              <a href="P3.html">Kata</a>
+            </li>
+
+            <li>
+              <a href="P4.html">Kumite</a>
+            </li>
+
+            <li>
+              <a href="P5.html">History of Goju-Ryu</a>
+            </li>
+
+            <li>
+              <a href="P6.html">History of KKOGK</a>
+            </li>
+
+            <li>
+              <a href="P7.html">Instructors</a>
+            </li>
+
+            <li>
+              <a href="Gallery.html" class="active">Gallery</a>
+            </li>
+
+            <li>
+              <a href="P8.html">Affiliated With</a>
+            </li>
+
+            <li>
+              <a href="P9.html">Personal Journey</a>
+            </li>
+
+          </ul>
+        </nav>
+
+      </div>
+    </div>
+
+  </header>
+
+
+  <!-- Main Content -->
+  <main>
+
+    <a class="back" href="index.html">Back to Home</a>
+
+    <div class="card">
+
+      <div class="gallery-intro">
+
+        <h1>Dojo Gallery</h1>
+
+        <p>
+          Explore photographs from the training, students, and activities
+          of the affiliated Goju-Ryu dojos.
+        </p>
+
+        <div class="belt-rule"></div>
+
+      </div>
+
+
+      <!-- Dojo Selection -->
+
+      <div class="dojo-select">
+
+        <a class="dojo-card" href="#kaysers-beach-dojo">
+
+          <div class="dojo-card-media">
+            <img src="K1.jpg" alt="Kayser's Beach Dojo">
+          </div>
+
+          <div class="dojo-card-content">
+            <h2>Kayser's Beach Dojo</h2>
+            <p>
+              Training, students, and activities from Kayser's Beach Dojo.
+            </p>
+
+            <span class="dojo-card-arrow">
+              View Gallery →
+            </span>
+          </div>
+
+        </a>
+
+
+        <a class="dojo-card" href="#ryven-goju-dojo">
+
+          <div class="dojo-card-media">
+            <img src="R1.jpg" alt="Ryven Goju Dojo">
+          </div>
+
+          <div class="dojo-card-content">
+            <h2>Ryven Goju Dojo</h2>
+            <p>
+              Training, students, and activities from Ryven Goju Dojo.
+            </p>
+
+            <span class="dojo-card-arrow">
+              View Gallery →
+            </span>
+          </div>
+
+        </a>
+
+      </div>
+
+
+      <!-- Kayser's Beach Dojo Gallery -->
+
+      <section class="dojo-gallery" id="kaysers-beach-dojo">
+
+        <div class="dojo-gallery-heading">
+
+          <div>
+            <h2>Kayser's Beach Dojo</h2>
+            <p>Photo gallery — Kayser's Beach Dojo</p>
+          </div>
+
+          <a class="gallery-back" href="#">
+            Back to Dojos ↑
+          </a>
+
+        </div>
+
+        <div class="photo-grid">
+
+          <a class="gallery-photo" href="K1.jpg" data-lightbox>
+            <img src="K1.jpg" alt="Kayser's Beach Dojo — Photo 1">
+          </a>
+
+          <a class="gallery-photo" href="K2.jpg" data-lightbox>
+            <img src="K2.jpg" alt="Kayser's Beach Dojo — Photo 2">
+          </a>
+
+          <a class="gallery-photo" href="K3.jpg" data-lightbox>
+            <img src="K3.jpg" alt="Kayser's Beach Dojo — Photo 3">
+          </a>
+
+          <a class="gallery-photo" href="K4.jpg" data-lightbox>
+            <img src="K4.jpg" alt="Kayser's Beach Dojo — Photo 4">
+          </a>
+
+          <a class="gallery-photo" href="K5.jpg" data-lightbox>
+            <img src="K5.jpg" alt="Kayser's Beach Dojo — Photo 5">
+          </a>
+
+          <a class="gallery-photo" href="K6.jpg" data-lightbox>
+            <img src="K6.jpg" alt="Kayser's Beach Dojo — Photo 6">
+          </a>
+
+          <a class="gallery-photo" href="K7.jpg" data-lightbox>
+            <img src="K7.jpg" alt="Kayser's Beach Dojo — Photo 7">
+          </a>
+
+          <a class="gallery-photo" href="K8.jpg" data-lightbox>
+            <img src="K8.jpg" alt="Kayser's Beach Dojo — Photo 8">
+          </a>
+
+          <a class="gallery-photo" href="K9.jpg" data-lightbox>
+            <img src="K9.jpg" alt="Kayser's Beach Dojo — Photo 9">
+          </a>
+
+          <a class="gallery-photo" href="K10.jpg" data-lightbox>
+            <img src="K10.jpg" alt="Kayser's Beach Dojo — Photo 10">
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- Ryven Goju Dojo Gallery -->
+
+      <section class="dojo-gallery" id="ryven-goju-dojo">
+
+        <div class="dojo-gallery-heading">
+
+          <div>
+            <h2>Ryven Goju Dojo</h2>
+            <p>Photo gallery — Ryven Goju Dojo</p>
+          </div>
+
+          <a class="gallery-back" href="#">
+            Back to Dojos ↑
+          </a>
+
+        </div>
+
+        <div class="photo-grid">
+
+          <a class="gallery-photo" href="R1.jpg" data-lightbox>
+            <img src="R1.jpg" alt="Ryven Goju Dojo — Photo 1">
+          </a>
+
+          <a class="gallery-photo" href="R2.jpg" data-lightbox>
+            <img src="R2.jpg" alt="Ryven Goju Dojo — Photo 2">
+          </a>
+
+          <a class="gallery-photo" href="R3.jpg" data-lightbox>
+            <img src="R3.jpg" alt="Ryven Goju Dojo — Photo 3">
+          </a>
+
+          <a class="gallery-photo" href="R4.jpg" data-lightbox>
+            <img src="R4.jpg" alt="Ryven Goju Dojo — Photo 4">
+          </a>
+
+          <a class="gallery-photo" href="R5.jpg" data-lightbox>
+            <img src="R5.jpg" alt="Ryven Goju Dojo — Photo 5">
+          </a>
+
+          <a class="gallery-photo" href="R6.jpg" data-lightbox>
+            <img src="R6.jpg" alt="Ryven Goju Dojo — Photo 6">
+          </a>
+
+          <a class="gallery-photo" href="R7.jpg" data-lightbox>
+            <img src="R7.jpg" alt="Ryven Goju Dojo — Photo 7">
+          </a>
+
+          <a class="gallery-photo" href="R8.jpg" data-lightbox>
+            <img src="R8.jpg" alt="Ryven Goju Dojo — Photo 8">
+          </a>
+
+          <a class="gallery-photo" href="R9.jpg" data-lightbox>
+            <img src="R9.jpg" alt="Ryven Goju Dojo — Photo 9">
+          </a>
+
+          <a class="gallery-photo" href="R10.jpg" data-lightbox>
+            <img src="R10.jpg" alt="Ryven Goju Dojo — Photo 10">
+          </a>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- Footer -->
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="brand-mini">
+        Ryven Goju Dojo
+      </div>
+
+      <div class="footer-links">
+        Okinawa Goju-Ryu Karate-Kobudo
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- Lightbox -->
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+
+    <button class="lightbox-close" type="button" aria-label="Close photo">
+      ×
+    </button>
+
+    <img id="lightbox-image" src="" alt="">
+
+  </div>
+
+
+  <script>
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const closeButton = document.querySelector(".lightbox-close");
+
+    document.querySelectorAll("[data-lightbox]").forEach(photo => {
+
+      photo.addEventListener("click", function(event) {
+
+        event.preventDefault();
+
+        lightboxImage.src = this.href;
+        lightboxImage.alt = this.querySelector("img").alt;
+
+        lightbox.classList.add("is-open");
+        lightbox.setAttribute("aria-hidden", "false");
+
+        document.body.style.overflow = "hidden";
+      });
+
+    });
+
+    function closeLightbox() {
+
+      lightbox.classList.remove("is-open");
+      lightbox.setAttribute("aria-hidden", "true");
+
+      lightboxImage.src = "";
+
+      document.body.style.overflow = "";
+    }
+
+    closeButton.addEventListener("click", closeLightbox);
+
+    lightbox.addEventListener("click", function(event) {
+
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+
+    });
+
+    document.addEventListener("keydown", function(event) {
+
+      if (event.key === "Escape") {
+        closeLightbox();
+      }
+
+    });
+  </script>
+
+</body>
+</html>
