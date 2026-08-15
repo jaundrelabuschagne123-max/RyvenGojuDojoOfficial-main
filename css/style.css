@@ -1195,3 +1195,23 @@ img.img-missing{
   }
 
 }
+
+
+
+
+
+.media-frame {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 700px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
