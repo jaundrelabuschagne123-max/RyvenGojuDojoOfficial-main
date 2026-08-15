@@ -1215,3 +1215,42 @@ img.img-missing{
     object-fit: contain;
     display: block;
 }
+
+
+
+
+.affiliate-media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.affiliate-media img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+
+
+
+
+.timeline-media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.timeline-media img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+}
