@@ -437,7 +437,7 @@
       </section>
 
 
-    <!-- Ryven Goju Dojo Gallery -->
+     <!-- Ryven Goju Dojo Gallery -->
 
 <section class="dojo-gallery" id="ryven-goju-dojo">
 
@@ -452,37 +452,26 @@
 
   <div class="photo-grid">
 
-    <!-- PHOTO 1 -->
     <a class="gallery-photo" href="Jaundre2.png" data-lightbox>
       <img src="Jaundre2.png" alt="Ryven Goju Dojo — Photo 1">
     </a>
 
-
-    <!-- VIDEO 1 — TAIKYOKU KATA -->
-    <a class="gallery-photo" href="#" onclick="openVideo('TK.mp4'); return false;">
-      <img src="TK.jpeg" alt="Ryven Goju Dojo — Taikyoku Kata">
+    <a class="gallery-photo" href="3.jpeg" data-lightbox>
+      <img src="3.jpeg" alt="Ryven Goju Dojo — Photo 2">
     </a>
 
-
-    <!-- VIDEO 2 — FUKKYU KATA -->,
-    <a class="gallery-photo" href="#" onclick="openVideo('FK.mp4'); return false;">
-      <img src="FK.jpeg" alt="Ryven Goju Dojo — Fukkyu Kata">
+    <a class="gallery-photo" href="8.jpeg" data-lightbox>
+      <img src="8.jpeg" alt="Ryven Goju Dojo — Photo 3">
     </a>
 
-
-    <!-- PHOTO 4 -->
     <a class="gallery-photo" href="1.jpeg" data-lightbox>
       <img src="1.jpeg" alt="Ryven Goju Dojo — Photo 4">
     </a>
 
-
-    <!-- PHOTO 5 -->
     <a class="gallery-photo" href="1.jpeg" data-lightbox>
       <img src="1.jpeg" alt="Ryven Goju Dojo — Photo 5">
     </a>
 
-
-    <!-- PHOTO 6 -->
     <a class="gallery-photo" href="1.jpeg" data-lightbox>
       <img src="1.jpeg" alt="Ryven Goju Dojo — Photo 6">
     </a>
@@ -491,57 +480,9 @@
 
 </section>
 
+    </div>
 
-<!-- VIDEO POPUP -->
-
-<div id="videoModal" class="video-modal">
-
-  <div class="video-container">
-
-    <span class="video-close" onclick="closeVideo()">&times;</span>
-
-    <video id="galleryVideo" controls playsinline>
-      <source id="videoSource" src="" type="video/mp4">
-      Your browser does not support MP4 video.
-    </video>
-
-  </div>
-
-</div>
-
-
-<script>
-
-function openVideo(videoFile) {
-
-    const modal = document.getElementById("videoModal");
-    const video = document.getElementById("galleryVideo");
-
-    video.src = videoFile;
-
-    modal.style.display = "flex";
-
-    video.load();
-
-}
-
-
-function closeVideo() {
-
-    const modal = document.getElementById("videoModal");
-    const video = document.getElementById("galleryVideo");
-
-    video.pause();
-
-    video.currentTime = 0;
-
-    video.src = "";
-
-    modal.style.display = "none";
-
-}
-
-</script>
+  </main>
 
 
   <!-- Footer -->
